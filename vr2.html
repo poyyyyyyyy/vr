@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="js/aframe.min.js"></script>
+</head>
+<body>
+    <a-scene>
+        <!-- กำหนดคอนโทรลเลอร์ vr ทั้งซ้ายและขวา -->
+        <a-entity id="Left" oculus-touch-controls="hand: left"></a-entity>
+        <a-entity id="Right" oculus-touch-controls="hand: right"></a-entity>
+        <!-- เพิ่มกล่องในฉาก vr -->
+        <a-box color="red " position="-1 0.5 -3 "rotation= "0 45 0" ></a-box>
+
+       <!-- เพิ่มท้องฟ้าในฉาก vr -->
+       <a-sky color="#FFB6C1"></a-sky>
+
+        <!-- เพิ่มพื้นดินในฉาก vr -->
+        <a-plane position="0 0 -4" rotation="-90 0 0" width="9" height="9" color="#B0C4DE"></a-plane>
+        <!-- กำหนดกล้องและตั้วชี้ในฉาก vr -->
+        <a-camera>
+            <a-cursor></a-cursor>
+        </a-camera>
+    </a-scene>
+</body>
+</html>

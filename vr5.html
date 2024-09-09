@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+    <script src="js/aframe.min.js"></script>
+    <script src="js/aframe-super-shooter-kit.min.js"></script>
+    <script>
+        // สร้างคอมโพแนน
+        AFRAME.registerComponent('triggerdown-listener',{
+        init: function(){
+            var el = this.el;
+            el.addEventListener('triggerdown', function(evt){
+                console.log("Trigger Presed");
+            });
+            document.body.addEventListener('triggerdown',()=>{this.el.emit('shoot');});
+        }
+        });
+        // สร้างคอมโพแนนต์
+        AFRAME.registerComponent('damage-hit' ,{
+            dependencies:['material'],
+        init: function(){
+            var color;  //ใช้เก็บค่าของสั
+            var el = this.el;
+            color = new THREE.Color();
+            color.set('#fff000'); //กำหนดสีเริ่มต้น
+            el.components.material.material.color.copy(color);
+        //เพิ่มเหตุการณ์สำหรับการถูกยิง
+        el.addEventListener('hit',()=>{
+            color.addScalar(0.05); //ปรับแสงเมื่อถูกยิง
+            el.components.material.material.color.copy(color);
+
+        });
+        //เพิ่มเหตุการณ์เมื่อเป้าหมายตาย
+        el.addEventListener('die',()=>{
+            color.set('#B22222');
+            el.components.material.material.color.copy(color);
+         });
+        }
+        });
+    </script>
+</head>
+<body>
+    <a-scene>
+        <a-assets>
+        <!-- สร้าง ลูกกระสุน -->
+            <a-entity id="bulletTemplate" bullet geometry="primitive:sphere; radius:0.30" material="color:pink"></a-entity>
+            <a-asset-item id="Gun" src="modles/mp7.gltf"></a-asset-item>
+
+            <img id=logo src="img/Logo-01.png" >
+        </a-assets>
+
+        <!-- กำหนดคอนโทรลเลอร์ vr ทั้งซ้ายและขวา -->
+        <a-entity id="Left" shooter oculus-touch-controls="hand: left" triggerdown-listener>
+            <a-gltf-model src="#Gun" rotation="0 0 0" scale="0.01 0.01 0.01" position="0 -0.2 0"></a-gltf-model>
+        </a-entity>
+        <a-entity id="Right" shooter oculus-touch-controls="hand: right" triggerdown-listener>
+            <a-gltf-model src="#Gun" rotation="0 0 0" scale="0.01 0.01 0.01"  position="0 -0.2 0"></a-gltf-model>
+        </a-entity>
+       
+        <!-- สร้างเป้าหมายที่สามารถถูกยิงและเปลี่ยนสีได้ -->
+         <a-entity class="target" target="healthPoints:10" geometry="primitive:sphere" 
+         material="color:#fff000" position="0 3 -7" damage-hit></a-entity>>
+
+       <!-- เพิ่มท้องฟ้าในฉาก vr -->
+       <a-sky color="#FFB6C1"></a-sky>
+
+        <!-- เพิ่มพื้นดินในฉาก vr -->
+        <a-plane position="0 0 -4" rotation="-90 0 0" width="9" height="9" material="src: url(img/bglego.jpg); repeat:20 20">
+
+        </a-plane>
+        <a-image src="#logo" position="0 1 -2"></a-image>
+        <!-- กำหนดกล้องและตั้วชี้ในฉาก vr -->
+        <a-camera>
+            <a-cursor></a-cursor>
+        </a-camera>
+    </a-scene>
+</body>
+</html>
